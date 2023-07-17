@@ -2,11 +2,27 @@
   "sections": {
     "template": {
       "type": "template-article",
-      "disabled": true,
-      "settings": {
-      }
-    }
-  },
+      "blocks": {
+        "title": {
+          "type": "article_title"
+        },
+        
+          "author": {
+            "type": "article_author"
+          },
+          "published_date": {
+            "type": "article_published_date"
+          },
+          "thumbail": {
+            "type": "featured_image"
+          },
+          "content": {
+            "type": "article_content"
+          }
+      },
+      "block_order": ["title", "author", "published_date", "thumbail", "content"] 
+  }
+},
   "order": [
     "template"
   ]
