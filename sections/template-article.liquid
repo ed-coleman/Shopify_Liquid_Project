@@ -20,15 +20,12 @@
       <div class="flex items-center justify-center">
         <div class="max-w-7xl:text-center">
           {% if section.settings.enable_published_date %}
-            <time datetime="{{ article.published_at | date: '%Y-%m-%d'  }}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
+            <time datetime="{{ article.published_at | date: '%Y-%m-%d'  }}">{{ article.published_at | date: format: "on_date" }}</time>
           {% endif %}
         </div>
       </div>
-      {% if section.settings.enable_published_date %}
-        <time datetime="{{ article.published_at | date: '%Y-%m-%d'  }}">{{ article.published_at | date: format: "on_date" }}</time>
-      {% endif %}
       {% when 'featured_image' %}
-      <div class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden">
+      <div class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden my-4">
         {% if article.image != blank %}
           <img
             class="w-full h-80 md:96 object-cover object-center"
