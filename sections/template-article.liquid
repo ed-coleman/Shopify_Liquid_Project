@@ -16,7 +16,6 @@
         <small>{{ article.author }}</small>
       {% endif %}
       {% when "article_published_date" %}
-<h1>YOYOYOYOYOYOYOY</h1>
       {% if section.settings.enable_published_date %}
         <time datetime="{{ article.published_at | date: '%Y-%m-%d'  }}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
       {% endif %}
