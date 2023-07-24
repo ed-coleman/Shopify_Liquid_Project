@@ -11,20 +11,20 @@
             <div class="bg-white shadow-xl rounded-lg overflow-hidden">
               {% if article.image %}
 
-                <div class="p-4">
-                  <a href="{{ article.url }}">
-                    <img
-                      class="w-full h-80 object-cover"
-                      src="{{ article.image | img_url: "medium" }}"
-                      alt="{{ article.image.alt }}">
-                  </a>
 
-                {% else %}
+                <a href="{{ article.url }}">
+                  <img
+                    class="w-full h-80 object-cover"
+                    src="{{ article.image | img_url: "medium" }}"
+                    alt="{{ article.image.alt }}">
+                </a>
 
-                  {{ "image" | placeholder_svg_tag: "w-full h-80 object-cover bg-gray-100" }}
+              {% else %}
 
-                {% endif %}
+                {{ "image" | placeholder_svg_tag: "w-full h-80 object-cover bg-gray-100" }}
 
+              {% endif %}
+              <div class="p-4">
                 <h1 class="text-xl font-medium my-4">{{ article.title }}</h1>
 
                 {% if article.excerpt.size > 0 %}
