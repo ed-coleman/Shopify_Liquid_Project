@@ -4,13 +4,10 @@
       {% if product.featured_image %}
         <div class="h-80 overflow-hidden">
           <img
-            class="object-cover transition duration-1000 ease-in-out hover:scale-105 transform"
-            width="{{ product.featured_image.width }}"
-            height="{{ product.featured_image.height }}"
+            class="w-full h-full object-cover transition duration-1000 ease-in-out hover:scale-105 transform"
             src="{{ product.featured_image.src | image_url: width: 240 }}"
             alt="{{ product.featured_image.alt }}"
             loading="lazy" />
-          width
         </div>
       {% else %}
 
