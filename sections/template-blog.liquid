@@ -22,6 +22,7 @@
               <h1>{{ article.title }}</h1>
 
               {% if article.excerpt.size > 0 %}
+              <p>{{ article.excerpt | strip_html | truncatewords: 15 }} </p>
                 {% else %}
                   <p>{{ article.content | strip_html | truncatewords: 15 }}</p>
 
@@ -31,7 +32,7 @@
         {% endfor %}
       </div>
     </div>
-    
+
   {% endpaginate %}
 </div>
 
