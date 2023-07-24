@@ -4,11 +4,14 @@
       {% if product.featured_image %}
         <div class="h-80 overflow-hidden">
           <img
-            class="w-full h-full object-cover transition duration-1000 ease-in-out hover:scale-105 transform"
-            src="{{ product.featured_image | image_url: 'medium' }}"
-            alt="{{ product.featured_image.alt }}"/>
+            class="object-cover transition duration-1000 ease-in-out hover:scale-105 transform"
+            width="{{ product.featured_image.width }}"
+            height="{{ product.featured_image.height }}"
+            src="{{ product.featured_image | image_url: width: 240 }}"
+            alt="{{ product.featured_image.alt }}"
+            loading="lazy" />
+          width
         </div>
-
       {% else %}
 
         {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100' }}
