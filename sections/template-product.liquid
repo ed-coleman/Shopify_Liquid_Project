@@ -48,17 +48,22 @@
             </div>
         </div>
 
-<script>
-  const swiper = new Swiper('.swiper', {
-    direction: 'horiztonal',
-    pagination: {
-      el: '.swiper-pagination'
-    },
-
-    navigation: {
-      prevEl: '.swiper-button-prev',
-    nextEl: '.swiper-button-next'
-    }
-  })
-  
-</script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                try {
+                    const swiper = new Swiper('.swiper', {
+                            direction: 'horizontal',
+        
+                            pagination: {
+                                el: '.swiper-pagination'
+                            },
+        
+                            navigation: {
+                                prevEl: '.swiper-button-prev',
+                                nextEl: '.swiper-button-next'
+                        }
+                    })
+                } catch(e) { console.log("SwiperJS is not defined"); }
+            })
+            
+        </script>
