@@ -62,7 +62,28 @@
                     {% assign product_price = product.selected_or_first_available_variant %}
                     <span class="text-base text-gray-500 line-through">{{ product.compare_at_price | money }}</span>
                     <span class="text-lg text-gray-900">{{ product.price | money }}</span>
+
+                    {% if product.price > product.compare_at_price %}
+
+                    <span class="px-5 py-1 text-sm font-bold bg-red-500 rouded-full text-white mx-4">Sale</span>
+                        
+                    {% endif %}
                 </div>
+
+                <div class="my-3">
+                {% unless product.has_only_default_variant %}
+
+                <div data-url="{{ product.url }}" data-section="{{ section.id }}">
+                    {% for option in product.options_with_values %}
+                        <label for="Option-{{ section.id }}">{{ option.name }}</label>
+                        
+                    {% endfor %}
+                </div>
+
+        
+                {% endunless %}
+                </div>
+
             {% endform %}
         </div>
 
