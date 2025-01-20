@@ -1,23 +1,24 @@
 {% assign main_menu_linklist = linklists[section.settings.menu].links %}
 
-
-<div class="relative bg-white" x-data="{ mobileMenuOpen: true }">
+<div class="relative bg-white" x-data="{ mobileMenuOpen: false }">
   <div class="mx-auto px-4 sm:px-6">
     <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
       <!-- STORE NAME / STORE LOGO -->
       <div class="flex justify-start lg:flex-1 truncate">
         <h1 class="text-xl font-bold truncate">{{ shop.name }}</h1>
       </div>
+
+      <!-- MOBILE MENU TOGGLE BUTTON (for small screens) -->
       <div class="-mr-2 -my-2 ml-3 md:hidden">
         <button
-          x-on:click="mobileMenuOpen = true"
+          x-on:click="mobileMenuOpen = !mobileMenuOpen"  <!-- Toggle mobile menu visibility -->
           type="button"
           class="bg-white p-2 inline-flex items-center justify-center focus:outline-none">
           {% render 'icon-hamburger' %}
         </button>
       </div>
 
-      <!-- NAVIGATION MENU -->
+      <!-- DESKTOP NAVIGATION MENU -->
       <nav x-data="{ open: false }" class="hidden md:flex space-x-10">
         {% for link in main_menu_linklist %}
           {% if link.links != blank %}
@@ -45,8 +46,6 @@
                         </div>
                       </a>
                     {% endfor %}
-
-
                   </div>
                 </div>
               </div>
@@ -59,26 +58,29 @@
         {% endfor %}
       </nav>
 
-
-
+      <!-- DESKTOP RIGHT HAND LINKS (Cart, Login/Register) -->
       <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
         <a href="{{ routes.cart_url }}" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
           {% render 'icon-shopping-bag' %}
         </a>
-{% if shop.customer_accounts_enabled %}
-<a href="{{ routes.account_login_url }}" class="text-base text-gray-500 hover:text-gray-900">Login</a>
-<a href="{{ routes.account_register_url }}" class="text-base text-gray-500 hover:text-gray-900">Register</a>
-{% endif %}
-  
+        {% if shop.customer_accounts_enabled %}
+          <a href="{{ routes.account_login_url }}" class="text-base text-gray-500 hover:text-gray-900">Login</a>
+          <a href="{{ routes.account_register_url }}" class="text-base text-gray-500 hover:text-gray-900">Register</a>
+        {% endif %}
       </div>
     </div>
   </div>
 
-  <div x-show="mobileMenuOpen" class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
+  <!-- MOBILE MENU (visible when mobileMenuOpen is true) -->
+  <div x-show="mobileMenuOpen" 
+       x-transition
+       class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden"
+       x-on:click.away="mobileMenuOpen = false"  <!-- Close when clicking outside -->
+       style="display: none;">
     <div class="shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 bg-white w-full">
       <div class="p-5 divide-y-2 divide-gray-50">
 
-        <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
+        <!-- MOBILE MENU HEADER (Title and Close Button) -->
         <div class="flex items-center justify-between pb-3">
           <div>
             <h1 class="text-lg text-gray-500">{{ section.settings.mobile_menu_title }}</h1>
@@ -92,7 +94,8 @@
             </button>
           </div>
         </div>
-        <!-- NAVIGATION LINKS FOR MOBILE MENU -->
+
+        <!-- MOBILE MENU LINKS -->
         <div class="pt-3">
           <nav class="grid gap-y-7">
             {% for link in main_menu_linklist %}
@@ -109,25 +112,20 @@
 
                   <div x-show="{{ link_handle }}" class="grid gap-y-7 py-3">
                     {% for childlink in link.links %}
-
                       <a href="#" class="-m-3 p-3 mt-2 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50">
                         <span class="ml-3 text-base font-medium text-gray-500">{{ childlink.title }}</span>
                       </a>
                     {% endfor %}
                   </div>
-                  </div>
-                {% else %}
-                  <div>
-                    <a href="#" class="-m-3 p-3 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50">
-                      {{ link.title }}
-                    </a>
-                  </div>
-                {% endif %}
-              {% endfor %}
-
-
-
-            </div>
+                </div>
+              {% else %}
+                <div>
+                  <a href="#" class="-m-3 p-3 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                    {{ link.title }}
+                  </a>
+                </div>
+              {% endif %}
+            {% endfor %}
           </nav>
         </div>
       </div>

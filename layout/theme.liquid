@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="{{ shop.locale }}">
+
+<head>
+  <!-- Standard Meta Tags and Other Tags -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="">
+  <link rel="canonical" href="{{ canonical_url }}">
+  
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+
+  <!-- External Font Preconnect -->
+  {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+  {%- endunless -%}
+
+  <!-- Title and Meta Description -->
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Include Alpine.js -->
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+  <script src="your-script.js?v={{ 'now' | date: '%s' }}"></script>
+
+
+  <!-- Include JavaScript Files -->
+  <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
+
+  {%- if settings.animations_reveal_on_scroll -%}
+    <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {{ content_for_header }}
+
+  {%- liquid
+    assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+    assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+    assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+    assign body_font_bold_italic = body_font_bold_italic | font_face: font_display: 'swap'
+  %}
+
+  <!-- CSS Styles (Preload/Inline/Global) -->
+  {% style %}
+    {{ settings.type_body_font | font_face: font_display: 'swap' }}
+    {{ body_font_bold | font_face: font_display: 'swap' }}
+    {{ body_font_italic | font_face: font_display: 'swap' }}
+    {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+  {% endstyle %}
+
+  <!-- Link to CSS Files -->
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  
+  <!-- These are the CSS files you've mentioned -->
+  {{ 'application.css' | asset_url | stylesheet_tag }}
+  {{ 'output.css' | asset_url | stylesheet_tag }}
+  {{ 'styles.css' | asset_url | stylesheet_tag }}
+
+  <!-- Additional component-specific styles -->
+  <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+
+  {%- if settings.cart_type == 'drawer' -%}
+    {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+    {{ 'component-cart.css' | asset_url | stylesheet_tag }}
+    {{ 'component-totals.css' | asset_url | stylesheet_tag }}
+    {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+
+  {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+    {{ 'component-localization-form.css' | asset_url | stylesheet_tag: preload: true }}
+    <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- if settings.predictive_search_enabled -%}
+    <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
+  {%- endif -%}
+
+  <!-- Enable design mode for Shopify themes -->
+  <script>
+    if (Shopify.designMode) {
+      document.documentElement.classList.add('shopify-design-mode');
+    }
+  </script>
+
+</head>
+
+<body>
+  <!-- Include Header Section -->
+  {% section 'header' %}
+
+  <!-- Body Content Here -->
+  {{ content_for_layout }}
+
+  <!-- Closing Body and HTML Tags -->
+</body>
+
+</html>

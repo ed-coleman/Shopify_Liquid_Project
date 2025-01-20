@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
+{% assign selected_variant = product.selected_or_first_available_variant %}
+
 {% style %}
   .swiper-button-prev,
   .swiper-button-next {
@@ -13,146 +15,183 @@
     font-size: 20px;
   }
   .swiper-pagination { color: black; bottom: 0 !important; }
-  .swiper-pagination-bullet-active  { background: black !important; }
-
-  {% endstyle %}
+  .swiper-pagination-bullet-active { background: black !important; }
+  .product--information { height: fit-content; }
+{% endstyle %}
 
 <div class="max-w-6xl mx-auto my-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div class="product--medias">
-            <div class="hidden md:block">
-                {% for media in product.media %}
-                    <div class="h-100 overflow-hidden p-2">
-                        {% render 'product-media', media: media %}
-                    </div>
-                {% endfor %}
-            </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div class="product--medias">
+      <div class="hidden md:block">
+        {% for media in product.media %}
+          <div class="h-100 overflow-hidden p-2">
+            {% render 'product-media', media: media %}
+          </div>
+        {% endfor %}
+      </div>
 
-            <div class="md:hidden">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        {% for media in product.media %}
-                            <div class="swiper-slide">
-                                <div class="h-[100vw] overflow-hidden p-2">
-                                    {% render 'product-media', media: media %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="swiper-pagination"></div>
-
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+      <div class="md:hidden">
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            {% for media in product.media %}
+              <div class="swiper-slide">
+                <div class="h-[100vw] overflow-hidden p-2">
+                  {% render 'product-media', media: media %}
                 </div>
-            </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>
+      </div>
+    </div>
 
-        <div class="product--information">
-            {% form 'product', product %}
-                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    <div class="product--information sticky top-5 p2">
+      {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <p>Debug: Rendering block with type "{{ block.type }}"</p>
+            {% case block.type %}
+              {% when 'vendor' %}
                 <div class="my-3">
-                    <span class="text-xs text-gray-500">{{ product.vendor }}</span>
+                  <span class="text-xs text-gray-500">{{ product.vendor }}</span>
                 </div>
-
+              {% when 'title' %}
                 <div class="my-3">
-                    <h1 class="text-3xl text-gray-900">{{ product.title }}</h1> 
+                  <h1 class="text-3xl text-gray-900">{{ product.title }}</h1>
                 </div>
-
+              {% when 'price' %}
                 <div class="my-3">
-                    {% assign product_price = product.selected_or_first_available_variant %}
-                    <span class="text-base text-gray-500 line-through">{{ product.compare_at_price | money }}</span>
-                    <span class="text-lg text-gray-900">{{ product.price | money }}</span>
-
-                    {% if product.price < product.compare_at_price %}
-
+                  <span class="text-base text-gray-500 line-through">{{ selected_variant.compare_at_price | money }}</span>
+                  <span class="text-lg text-gray-900">{{ selected_variant.price | money }}</span>
+                  {% if selected_variant.price < selected_variant.compare_at_price %}
                     <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
-                        
-                    {% endif %}
+                  {% endif %}
                 </div>
-
-                <div class="my-3">
-                {% unless product.has_only_default_variant %}
-
-                <div data-url="{{ product.url }}" data-section="{{ section.id }}">
-                    {% for option in product.options_with_values %}
-                        <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
-
-                        <div class="my-2">
-                            <select
-                            name="options[{{ option.name | escape }}]"
-                            id="Option-{{ section.id }}-{{ forloop.index0 }}" 
-                            class="'w-full border py-3 px-5">
-                            {% for value in option.values %}
-                                <option
-                                 value="{{ value | escape }}"
-                                 {% if option.selected_value == value %}
-                                 selected="selected"
-                                    
-                                 {% endif %}
-                                 >
-                                 {{ value }}</option>
-                                
+                {% when 'color_selector' %}
+                    <div class="my-3">
+                      <label for="Color-{{ section.id }}" class="text-sm font-bold">Choose a Color:</label>
+                      <div class="my-2">
+                        <select name="color" id="Color-{{ section.id }}" class="w-full px-4 py-3 rounded-lg bg-white text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="">Select Color</option>
+                          {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
+                          {% if color_option %}
+                            {% for color_value in color_option.values %}
+                              <option value="{{ color_value }}" {% if selected_variant.option1 == color_value %} selected {% endif %} class="hover:bg-gray-200 focus:bg-gray-300">
+                                {{ color_value }}
+                              </option>
                             {% endfor %}
-                            </select>
-                        </div>
-                        
-                    {% endfor %}
-                </div>
-
-        
-                {% endunless %}
-                </div>
-                <div class="my-3">
-                    <label for="Quantity-{{ section.id }}">Quantity</label>
-
-                    <div class="my-2">
-                        <input class="w-full border px-3 py-3" type="number" name="quantity" id="Quantity-{{ section.id }}" value="1" min="1">
+                          {% else %}
+                            <option disabled>No color options available</option>
+                          {% endif %}
+                        </select>
+                      </div>
                     </div>
-                </div>
-
-                <div class="my-3">
-                    <p class="text-gray-700">{{ product.description }}</p>
-                </div>
-
-                <div class="my-3">
-                    <button type="submit" name="add" class="w-full px-6 py-4 bg-gray-900 text-white hover:bg-gray-700 rounded-sm my-2"
-                    {% if product.selected_or_first_available_variant == false %}
-                    disabled  
-                    {% endif %}
-                    >
-                       
-                        {% if product.selected_or_first_available_variant == false %}
-
-                        Sold Out
-
-                        {% else %}
-
-                            Add to cart
-                            
-                        {% endif %}
-                    </button>
-                </div>
-
-            {% endform %}
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                try {
-                    const swiper = new Swiper('.swiper', {
-                            direction: 'horizontal',
-        
-                            pagination: {
-                                el: '.swiper-pagination'
-                            },
-        
-                            navigation: {
-                                prevEl: '.swiper-button-prev',
-                                nextEl: '.swiper-button-next'
-                        }
-                    })
-                } catch(e) { console.log("SwiperJS is not defined"); }
-            })
             
-        </script>
+              {% when 'variant_selector' %}
+                <div class="my-3">
+                  {% unless product.has_only_default_variant %}
+                    <div data-url="{{ product.url }}" data-section="{{ section.id }}">
+                      {% for option in product.options_with_values %}
+                        <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+                        <div class="my-2">
+                          <select name="options[{{ option.name | escape }}]" id="Option-{{ section.id }}-{{ forloop.index0 }}" class="w-full border py-3 px-3">
+                            {% for value in option.values %}
+                              <option value="{{ value | escape }}" {% if option.selected_value == value %} selected {% endif %}>
+                                {{ value }}
+                              </option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endunless %}
+                </div>
+              {% when 'quantity' %}
+                <div class="my-3">
+                  <label for="Quantity-{{ section.id }}"></label>
+                  <div class="my-2">
+                    <input class="w-full border px-3 py-3" type="number" name="quantity" id="Quantity-{{ section.id }}" value="1" min="1">
+                  </div>
+                </div>
+              {% when 'description' %}
+                <div class="my-3">
+                  <p class="text-gray-700">{{ product.description }}</p>
+                </div>
+              {% when 'checkout_buttons' %}
+                <div class="my-3">
+                  <button type="submit" name="add" class="w-full px-6 py-4 bg-gray-900 text-white hover:bg-gray-700 rounded-sm my-2"
+                    {% if selected_variant.available == false %} disabled {% endif %}>
+                    {% if selected_variant.available == false %}
+                      Sold Out
+                    {% else %}
+                      Add To Cart
+                    {% endif %}
+                  </button>
+                </div>
+              {% else %}
+                <p>Debug: Unknown block type "{{ block.type }}"</p>
+            {% endcase %}
+          {% endfor %}
+        {% else %}
+          <p>Debug: No blocks found in the section.blocks array.</p>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        const swiper = new Swiper('.swiper', {
+          direction: 'horizontal',
+          pagination: {
+            el: '.swiper-pagination'
+          },
+          navigation: {
+            prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-button-next'
+          }
+        });
+      } catch(e) {
+        console.log("SwiperJS is not defined");
+      }
+    });
+  </script>
+
+  {% schema %}
+  {
+    "name": "Product",
+    "blocks": [
+      { "type": "vendor", "name": "Vendor", "limit": 1 },
+      { "type": "title", "name": "Title", "limit": 1 },
+      { "type": "price", "name": "Price", "limit": 1 },
+      { "type": "variant_selector", "name": "Variant Selector", "limit": 1 },
+      { "type": "quantity", "name": "quantity", "limit": 1 },
+      { "type": "description", "name": "Description", "limit": 1 },
+      { "type": "checkout_buttons", "name": "Checkout Buttons", "limit": 1 },
+      { "type": "image_picker", "name": "Image Selector", "limit": 1 },
+      { "type": "color_selector", "name": "Color Selector", "limit": 1 }
+    ],
+    "presets": [
+      {
+        "name": "Default",
+        "blocks": [
+          { "type": "vendor" },
+          { "type": "title" },
+          { "type": "price" },
+          { "type": "variant_selector" },
+          { "type": "quantity" },
+          { "type": "description" },
+          { "type": "checkout_buttons" },
+          { "type": "image_picker" }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
+</div>
