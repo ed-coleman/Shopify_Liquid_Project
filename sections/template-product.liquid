@@ -14,9 +14,16 @@
   .swiper-button-next::after {
     font-size: 20px;
   }
-  .swiper-pagination { color: black; bottom: 0 !important; }
-  .swiper-pagination-bullet-active { background: black !important; }
-  .product--information { height: fit-content; }
+  .swiper-pagination {
+    color: black;
+    bottom: 0 !important;
+  }
+  .swiper-pagination-bullet-active {
+    background: black !important;
+  }
+  .product--information {
+    height: fit-content;
+  }
 {% endstyle %}
 
 <div class="max-w-6xl mx-auto my-8">
@@ -25,7 +32,8 @@
       <div class="hidden md:block">
         {% for media in product.media %}
           <div class="h-100 overflow-hidden p-2">
-            {% render 'product-media', media: media %}
+            {% render 'product-media'
+              , media: media %}
           </div>
         {% endfor %}
       </div>
@@ -36,7 +44,8 @@
             {% for media in product.media %}
               <div class="swiper-slide">
                 <div class="h-[100vw] overflow-hidden p-2">
-                  {% render 'product-media', media: media %}
+                  {% render 'product-media'
+                    , media: media %}
                 </div>
               </div>
             {% endfor %}
@@ -49,8 +58,12 @@
     </div>
 
     <div class="product--information sticky top-5 p2">
-      {% form 'product', product %}
-        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+      {% form 'product'
+        , product %}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ selected_variant.id }}">
 
         {% if section.blocks.size > 0 %}
           {% for block in section.blocks %}
@@ -72,26 +85,33 @@
                     <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
                   {% endif %}
                 </div>
-                {% when 'color_selector' %}
-                    <div class="my-3">
-                      <label for="Color-{{ section.id }}" class="text-sm font-bold">Choose a Color:</label>
-                      <div class="my-2">
-                        <select name="color" id="Color-{{ section.id }}" class="w-full px-4 py-3 rounded-lg bg-white text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          <option value="">Select Color</option>
-                          {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
-                          {% if color_option %}
-                            {% for color_value in color_option.values %}
-                              <option value="{{ color_value }}" {% if selected_variant.option1 == color_value %} selected {% endif %} class="hover:bg-gray-200 focus:bg-gray-300">
-                                {{ color_value }}
-                              </option>
-                            {% endfor %}
-                          {% else %}
-                            <option disabled>No color options available</option>
-                          {% endif %}
-                        </select>
-                      </div>
-                    </div>
-            
+              {% when 'color_selector' %}
+                <div class="my-3">
+                  <label for="Color-{{ section.id }}" class="text-sm font-bold">Choose a Color:</label>
+                  <div class="my-2">
+                    <select
+                      name="color"
+                      id="Color-{{ section.id }}"
+                      class="w-full px-4 py-3 rounded-lg bg-white text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="">Select Color</option>
+                      {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
+                      {% if color_option %}
+                        {% for color_value in color_option.values %}
+                          <option
+                            value="{{ color_value }}"
+                            {% if selected_variant.option1 == color_value %}
+                            selected
+                            {% endif %}
+                            class="hover:bg-gray-200 focus:bg-gray-300">
+                            {{ color_value }}
+                          </option>
+                        {% endfor %}
+                      {% else %}
+                        <option disabled>No color options available</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
               {% when 'variant_selector' %}
                 <div class="my-3">
                   {% unless product.has_only_default_variant %}
@@ -99,9 +119,16 @@
                       {% for option in product.options_with_values %}
                         <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
                         <div class="my-2">
-                          <select name="options[{{ option.name | escape }}]" id="Option-{{ section.id }}-{{ forloop.index0 }}" class="w-full border py-3 px-3">
+                          <select
+                            name="options[{{ option.name | escape }}]"
+                            id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                            class="w-full border py-3 px-3">
                             {% for value in option.values %}
-                              <option value="{{ value | escape }}" {% if option.selected_value == value %} selected {% endif %}>
+                              <option
+                                value="{{ value | escape }}"
+                                {% if option.selected_value == value %}
+                                selected
+                                {% endif %}>
                                 {{ value }}
                               </option>
                             {% endfor %}
@@ -115,7 +142,13 @@
                 <div class="my-3">
                   <label for="Quantity-{{ section.id }}"></label>
                   <div class="my-2">
-                    <input class="w-full border px-3 py-3" type="number" name="quantity" id="Quantity-{{ section.id }}" value="1" min="1">
+                    <input
+                      class="w-full border px-3 py-3"
+                      type="number"
+                      name="quantity"
+                      id="Quantity-{{ section.id }}"
+                      value="1"
+                      min="1">
                   </div>
                 </div>
               {% when 'description' %}
@@ -124,8 +157,13 @@
                 </div>
               {% when 'checkout_buttons' %}
                 <div class="my-3">
-                  <button type="submit" name="add" class="w-full px-6 py-4 bg-gray-900 text-white hover:bg-gray-700 rounded-sm my-2"
-                    {% if selected_variant.available == false %} disabled {% endif %}>
+                  <button
+                    type="submit"
+                    name="add"
+                    class="w-full px-6 py-4 bg-gray-900 text-white hover:bg-gray-700 rounded-sm my-2"
+                    {% if selected_variant.available == false %}
+                    disabled
+                    {% endif %}>
                     {% if selected_variant.available == false %}
                       Sold Out
                     {% else %}
@@ -133,23 +171,23 @@
                     {% endif %}
                   </button>
                 </div>
-              {% else %}
-                <p>Debug: Unknown block type "{{ block.type }}"</p>
+                {% when 'text_block' %}
+                  <div class="bg-black text-white p-4">
+                    {% if block.settings.text_content %}
+                      <p>{{ block.settings.text_content }}</p>
+                    {% else %}
+                      <p>No text content provided.</p>
+                    {% endif %}
+                  </div>              
             {% endcase %}
           {% endfor %}
         {% else %}
           <p>Debug: No blocks found in the section.blocks array.</p>
         {% endif %}
       {% endform %}
-      {% for block in section.blocks %}
-        {% if block.type == 'text_block' %}
-          <div class="custom-text-block">
-            <p>TEST WORKS</p>
-          </div>
-        {% endif %}
-      {% endfor %}      
     </div>
   </div>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -170,20 +208,67 @@
     });
   </script>
 
-  {% schema %}
+{% schema %}
   {
     "name": "Product",
     "blocks": [
-      { "type": "vendor", "name": "Vendor", "limit": 1 },
-      { "type": "title", "name": "Title", "limit": 1 },
-      { "type": "price", "name": "Price", "limit": 1 },
-      { "type": "variant_selector", "name": "Variant Selector", "limit": 1 },
-      { "type": "quantity", "name": "quantity", "limit": 1 },
-      { "type": "description", "name": "Description", "limit": 1 },
-      { "type": "checkout_buttons", "name": "Checkout Buttons", "limit": 1 },
-      { "type": "image_selector", "name": "Image Selector", "limit": 1 },
-      { "type": "color_selector", "name": "Color Selector", "limit": 1 },
-      { "type": "text_block",  "name": "Text Block", "limit": 2 }
+      {
+        "type": "vendor",
+        "name": "Vendor",
+        "limit": 1
+      },
+      {
+        "type": "title",
+        "name": "Title",
+        "limit": 1
+      },
+      {
+        "type": "price",
+        "name": "Price",
+        "limit": 1
+      },
+      {
+        "type": "variant_selector",
+        "name": "Variant Selector",
+        "limit": 1
+      },
+      {
+        "type": "quantity",
+        "name": "Quantity",
+        "limit": 1
+      },
+      {
+        "type": "description",
+        "name": "Description",
+        "limit": 1
+      },
+      {
+        "type": "checkout_buttons",
+        "name": "Checkout Buttons",
+        "limit": 1
+      },
+      {
+        "type": "image_selector",
+        "name": "Image Selector",
+        "limit": 1
+      },
+      {
+        "type": "color_selector",
+        "name": "Color Selector",
+        "limit": 1
+      },
+      {
+        "type": "text_block",
+        "name": "Text Block",
+        "settings": [
+          {
+            "type": "textarea",
+            "label": "Text Content",
+            "id": "text_content",
+            "default": "Enter your text here"
+          }
+        ]
+      }
     ],
     "presets": [
       {
@@ -203,4 +288,6 @@
     ]
   }
   {% endschema %}
+  
+  
 </div>
