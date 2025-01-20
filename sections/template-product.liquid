@@ -67,7 +67,6 @@
 
         {% if section.blocks.size > 0 %}
           {% for block in section.blocks %}
-            <p>Debug: Rendering block with type "{{ block.type }}"</p>
             {% case block.type %}
               {% when 'vendor' %}
                 <div class="my-3">
@@ -85,6 +84,7 @@
                     <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
                   {% endif %}
                 </div>
+
               {% when 'color_selector' %}
                 <div class="my-3">
                   <label for="Color-{{ section.id }}" class="text-sm font-bold">Choose a Color:</label>
@@ -170,19 +170,10 @@
                       Add To Cart
                     {% endif %}
                   </button>
+
                 </div>
-                {% when 'text_block' %}
-                  <div class="bg-black text-white p-4">
-                    {% if block.settings.text_content %}
-                      <p>{{ block.settings.text_content }}</p>
-                    {% else %}
-                      <p>No text content provided.</p>
-                    {% endif %}
-                  </div>              
             {% endcase %}
           {% endfor %}
-        {% else %}
-          <p>Debug: No blocks found in the section.blocks array.</p>
         {% endif %}
       {% endform %}
     </div>
@@ -259,15 +250,7 @@
       },
       {
         "type": "text_block",
-        "name": "Text Block",
-        "settings": [
-          {
-            "type": "textarea",
-            "label": "Text Content",
-            "id": "text_content",
-            "default": "Enter your text here"
-          }
-        ]
+        "name": "Text Block"
       }
     ],
     "presets": [

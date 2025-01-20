@@ -43,10 +43,6 @@
         "image_selector": {
           "type": "image_selector",
           "settings": {}
-        },
-        "text_block": {
-          "type": "text_block",
-          "settings": {}
         }
       },
       "block_order": [
@@ -57,8 +53,7 @@
         "image_selector",
         "quantity",
         "description",
-        "checkout_buttons",
-        "text_block"
+        "checkout_buttons"
       ],
       "settings": {}
     }
