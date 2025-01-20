@@ -39,6 +39,14 @@
         "checkout_buttons": {
           "type": "checkout_buttons",
           "settings": {}
+        },
+        "image_selector": {
+          "type": "image_selector",
+          "settings": {}
+        },
+        "text_block": {
+          "type": "text_block",
+          "settings": {}
         }
       },
       "block_order": [
@@ -46,9 +54,11 @@
         "title",
         "price",
         "color_selector",
+        "image_selector",
         "quantity",
         "description",
-        "checkout_buttons"
+        "checkout_buttons",
+        "text_block"
       ],
       "settings": {}
     }

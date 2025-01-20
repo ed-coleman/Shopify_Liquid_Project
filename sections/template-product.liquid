@@ -141,6 +141,13 @@
           <p>Debug: No blocks found in the section.blocks array.</p>
         {% endif %}
       {% endform %}
+      {% for block in section.blocks %}
+        {% if block.type == 'text_block' %}
+          <div class="custom-text-block">
+            <p>TEST WORKS</p>
+          </div>
+        {% endif %}
+      {% endfor %}      
     </div>
   </div>
 
@@ -174,8 +181,9 @@
       { "type": "quantity", "name": "quantity", "limit": 1 },
       { "type": "description", "name": "Description", "limit": 1 },
       { "type": "checkout_buttons", "name": "Checkout Buttons", "limit": 1 },
-      { "type": "image_picker", "name": "Image Selector", "limit": 1 },
-      { "type": "color_selector", "name": "Color Selector", "limit": 1 }
+      { "type": "image_selector", "name": "Image Selector", "limit": 1 },
+      { "type": "color_selector", "name": "Color Selector", "limit": 1 },
+      { "type": "text_block",  "name": "Text Block", "limit": 2 }
     ],
     "presets": [
       {
@@ -188,7 +196,8 @@
           { "type": "quantity" },
           { "type": "description" },
           { "type": "checkout_buttons" },
-          { "type": "image_picker" }
+          { "type": "image_selector" },
+          { "type": "text_block" }
         ]
       }
     ]
